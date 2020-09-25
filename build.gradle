@@ -33,4 +33,4 @@ javafx {
 }
 
 
-mainClassName = 'Classes.Main'
+mainClassName = 'Main'
