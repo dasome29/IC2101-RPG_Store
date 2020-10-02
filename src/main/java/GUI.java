@@ -1,3 +1,6 @@
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -6,7 +9,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GUI {
@@ -19,6 +30,7 @@ public class GUI {
     private Button newItemButton = new Button("New Item");
     private ArrayList<Item> items = new ArrayList<>();
     private MenuBar menuBar;
+
     public GUI(Pane root) {
         this.root = root;
         label = new Label("HOLAAAAA");
@@ -26,11 +38,9 @@ public class GUI {
         rightPane.setAlignment(Pos.TOP_LEFT);
         newItemButton.setOnMouseClicked(mouseEvent -> {
             System.out.println("Adding an Item.");
-            try {
-                addItem();
-            } catch (UnirestException e) {
-                e.printStackTrace();
-            }
+
+            addItem();
+
         });
         menuBar = new MenuBar(this.root, buyPane, inventoryPane, leftScrollPane);
     }
@@ -57,13 +67,43 @@ public class GUI {
 
     }
 
-    private void addItem() throws UnirestException {
-//        HttpResponse<JsonNode> response = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin=B07ZPKR714")
-//                .header("x-rapidapi-host", "amazon-product-reviews-keywords.p.rapidapi.com")
-//                .header("x-rapidapi-key", "203c5afef0msh42f0cc1f3c0f465p1048b2jsn6e07fdc34ead")
-//                .asJson();
-//        String json = response.getBody().toString();
-//        System.out.println(json);
+    private JsonNode getResponse(String key){
+        HttpResponse<JsonNode> http = null;
+        try {
+            http = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin="+key)
+                    .header("x-rapidapi-host", "amazon-product-reviews-keywords.p.rapidapi.com")
+                    .header("x-rapidapi-key", "203c5afef0msh42f0cc1f3c0f465p1048b2jsn6e07fdc34ead")
+                    .asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+        return http.getBody();
+    }
+
+    public JSONObject getInfo(){
+//        JsonNode response = getResponse("B07Y5W29JN");
+        JSONObject object = null;
+        JSONObject product;
+        FileReader file;
+        try {
+            String content = new String(Files.readAllBytes(Paths.get("data.json")), StandardCharsets.UTF_8);
+            object = new JSONObject(content);
+//            object = response.getObject();
+            product = object.getJSONObject("product");
+            System.out.println(product.get("asin"));
+            if (product.get("asin").equals("B07Y5W29JN")){
+                // Sube proteccioón
+                int protection = (int) product.get("ranking") / 2;
+                System.out.println("Es una cuchara");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return object;
+    }
+
+    private void addItem(){
         Item rectangle = new Item(buyPane);
         if (items.size() == 0) {
             rectangle.setY(20);

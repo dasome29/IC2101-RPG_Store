@@ -1,3 +1,4 @@
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,13 +17,17 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage)  {
 
         GUI gui = new GUI(root);
         root.setBackground(new Background(new BackgroundImage(new Image(getClass().getResource("backGround.png").toString()),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT)));
         gui.display();
+
+
+        gui.getInfo();
+
 
 
         Scene scene = new Scene(root, 800, 600);
