@@ -112,8 +112,9 @@ public class GUI {
                 int specialAttack=(int )product.get("total_videos")+75;
                 System.out.println(specialAttack);
             }
-            else if (product.get("asin").equals("B088FDVFPT")) {
-                System.out.println("Es un album");
+            else if (product.get("asin").equals("B0829F1BD6")) {
+                https://www.amazon.com/-/es/LiBa-Cortina-antimicrobiana-resistente-Transparente/dp/B0829F1BD6/
+                System.out.println("Es una cortina");
                 // Sube proteccioón
                 System.out.println(rev);
                 int protection = (int) product.get("total_images")*10;
@@ -223,6 +224,145 @@ public class GUI {
                 int specialAttack = (int) product.get("total_videos") + 97;
                 System.out.println(specialAttack);
             }
+
+
+            else if (product.get("asin").equals("B07BHTV9VQ")) {
+            //https://www.amazon.com/-/es/Dixie-pulgadas-unidades-exclusivo-desechables/dp/B07BHTV9VQ/
+            System.out.println("Es una plato");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 7;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 4;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 5;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 90;
+            System.out.println(specialAttack);
+        }
+
+
+            else if (product.get("asin").equals("B07444854P")) {
+            //https://www.amazon.com/-/es/Fila-Disruptor-II-Zapato-deportivo/dp/B07444854P/
+            System.out.println("Es un zapato");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 3;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 90;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 8;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 59;
+            System.out.println(specialAttack);
+        }
+
+            else if (product.get("asin").equals("B07RMKK1P3")) {
+            //https://www.amazon.com/-/es/Anime-Poke-Pachirisu-Mu%C3%B1eca-peluche/dp/B07RMKK1P3/
+            System.out.println("Es un peluche");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 9;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 2;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 8;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 68;
+            System.out.println(specialAttack);
+        }
+
+            else if (product.get("asin").equals("B07GJBBGHG")) {
+            //https://www.amazon.com/COSORI-Electric-Reminder-Touchscreen-Certified/dp/B07GJBBGHG/
+            System.out.println("Es una freidora");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 6;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") /100 ;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 2;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 37;
+            System.out.println(specialAttack);
+        }
+
+            else if (product.get("asin").equals("B0872QLW8W")) {
+            //https://www.amazon.com/KO-Skateboards-Monopat%C3%ADn-22-0-tibur%C3%B3n/dp/B0872QLW8W/
+            System.out.println("Es una patineta");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 5;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 4;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 3;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 97;
+            System.out.println(specialAttack);
+
+        }
+            else if (product.get("asin").equals("B07N1HX72G")) {
+            //https://www.amazon.com/PHOPOLLO-Dimmable-Controller-Non-Waterproof-Decoration/dp/B07N1HX72G/
+            System.out.println("Son unas luces");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 5;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 4;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 3;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 97;
+            System.out.println(specialAttack);
+
+        }
+            else if (product.get("asin").equals("B0719HYML3")) {
+            //https://www.amazon.com/Biotina-Amazon-Elements-vegana-c%C3%A1psulas/dp/B0719HYML3/
+            System.out.println("Es una biotina");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 5;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 81;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 2;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 61;
+            System.out.println(specialAttack);
+
+        }
+            else if (product.get("asin").equals("B07ZX7H5XL")) {
+            //https://www.amazon.com/dp/B07ZX7H5XL/
+            System.out.println("Es un masajeador");
+            // Sube proteccioón
+            System.out.println(rev);
+            int protection = (int) product.get("total_images") * 5;
+            System.out.println(protection);
+            int defense = (int) rev.get("total_reviews") / 4;
+            System.out.println(defense);
+            int speed = (int) prodInf.get("available_for_months");
+            System.out.println(speed);
+            int health = (int) prodInf.get("available_for_days") / 3;
+            System.out.println(health);
+            int specialAttack = (int) product.get("total_videos") + 97;
+            System.out.println(specialAttack);
+        }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
