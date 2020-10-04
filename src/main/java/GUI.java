@@ -68,6 +68,7 @@ public class GUI {
     }
 
     private JsonNode getResponse(String key){
+        System.out.print(key);
         HttpResponse<JsonNode> http = null;
         try {
             http = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin="+key)
@@ -85,17 +86,142 @@ public class GUI {
 //        JsonNode response = getResponse("B07Y5W29JN");
         JSONObject object = null;
         JSONObject product;
+        JSONObject rev;
+        JSONObject prodInf;
         FileReader file;
         try {
             String content = new String(Files.readAllBytes(Paths.get("data.json")), StandardCharsets.UTF_8);
             object = new JSONObject(content);
-//            object = response.getObject();
+       //     object = response.getObject();
             product = object.getJSONObject("product");
-            System.out.println(product.get("asin"));
-            if (product.get("asin").equals("B07Y5W29JN")){
-                // Sube proteccioón
-                int protection = (int) product.get("ranking") / 2;
+            rev = product.getJSONObject("reviews");
+            prodInf = product.getJSONObject("product_information");
+            System.out.println(product);
+            if (product.get("asin").equals("B07Y5W29JN")) {
                 System.out.println("Es una cuchara");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images")*10;
+                System.out.println(protection);
+                int defense=(int )rev.get("total_reviews")/77;
+                System.out.println(defense);
+                int speed=(int )prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health=(int )prodInf.get("available_for_days")/3;
+                System.out.println(health);
+                int specialAttack=(int )product.get("total_videos")+75;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B088FDVFPT")) {
+                System.out.println("Es un album");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images")*10;
+                System.out.println(protection);
+                int defense=(int )rev.get("total_reviews")/77;
+                System.out.println(defense);
+                int speed=(int )prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health=(int )prodInf.get("available_for_days")/3;
+                System.out.println(health);
+                int specialAttack=(int )product.get("total_videos")+75;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B088FDVFPT")) {
+                //https://www.amazon.com/-/es/JYP-Twice-%C3%81lbum-Tarjetas-fotos/dp/B088FDVFPT/
+                System.out.println("Es un album");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images")*9;
+                System.out.println(protection);
+                int defense=(int )rev.get("total_reviews")/95;
+                System.out.println(defense);
+                int speed=(int )prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health=(int )prodInf.get("available_for_days")/3;
+                System.out.println(health);
+                int specialAttack=(int )product.get("total_videos")+64;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B07QC6VKWB")) {
+                //https://www.amazon.com/-/es/Amazon-Brand-cer%C3%A1mica-interiores-pulgadas/dp/B07QC6VKWB/
+                System.out.println("Es una maceta");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images") * 13;
+                System.out.println(protection);
+                int defense = (int) rev.get("total_reviews") / 63;
+                System.out.println(defense);
+                int speed = (int) prodInf.get("available_for_months")*2;
+                System.out.println(speed);
+                int health = (int) prodInf.get("available_for_days") / 3;
+                System.out.println(health);
+                int specialAttack = (int) product.get("total_videos") + 83;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B07Y4ZYRQ3")) {
+                //https://www.amazon.com/-/es/organizador-adhesivos-soporte-duradero-resistente/dp/B07Y4ZYRQ3/
+                System.out.println("Es un cable");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images") * 12;
+                System.out.println(protection);
+                int defense = (int) rev.get("total_reviews") / 9;
+                System.out.println(defense);
+                int speed = (int) prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health = (int) prodInf.get("available_for_days") / 3;
+                System.out.println(health);
+                int specialAttack = (int) product.get("total_videos") + 91;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B00TJ9P1V6")) {
+                //https://www.amazon.com/medio-Porcelana-Extender-E26-Adaptador-extensi%C3%B3n/dp/B00TJ9P1V6/
+                System.out.println("Es un bombillo");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images") * 17;
+                System.out.println(protection);
+                int defense = (int) rev.get("total_reviews") / 2;
+                System.out.println(defense);
+                int speed = (int) prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health = (int) prodInf.get("available_for_days") / 4;
+                System.out.println(health);
+                int specialAttack = (int) product.get("total_videos") + 82;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B07KBY2P6P")) {
+                //https://www.amazon.com/-/es/Ohvera-All-Occasions-Pantalones-bolsillos/dp/B07KBY2P6P/
+                System.out.println("Es un pantalon");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images") * 3;
+                System.out.println(protection);
+                int defense = (int) rev.get("total_reviews") / 9;
+                System.out.println(defense);
+                int speed = (int) prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health = (int) prodInf.get("available_for_days") / 4;
+                System.out.println(health);
+                int specialAttack = (int) product.get("total_videos") + 49;
+                System.out.println(specialAttack);
+            }
+            else if (product.get("asin").equals("B0872QLW8W")) {
+                //https://www.amazon.com/KO-Skateboards-Monopat%C3%ADn-22-0-tibur%C3%B3n/dp/B0872QLW8W/
+                System.out.println("Es una patineta");
+                // Sube proteccioón
+                System.out.println(rev);
+                int protection = (int) product.get("total_images") * 5;
+                System.out.println(protection);
+                int defense = (int) rev.get("total_reviews") / 4;
+                System.out.println(defense);
+                int speed = (int) prodInf.get("available_for_months");
+                System.out.println(speed);
+                int health = (int) prodInf.get("available_for_days") / 3;
+                System.out.println(health);
+                int specialAttack = (int) product.get("total_videos") + 97;
+                System.out.println(specialAttack);
             }
         } catch (IOException e) {
             e.printStackTrace();
