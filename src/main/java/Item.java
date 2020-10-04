@@ -61,7 +61,7 @@ public class Item {
         number.setTranslateY(this.y + 20);
     }
 
-    public void setInventory(Inventory inventory){
+    public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
 
@@ -77,7 +77,7 @@ public class Item {
         return y;
     }
 
-    public String getName(){
+    public String getName() {
         return name.getText();
     }
 
@@ -107,8 +107,12 @@ public class Item {
             alert.showAndWait().ifPresent(type -> {
                 if (type.getButtonData() == ButtonBar.ButtonData.YES) {
                     System.out.println("You pressed Yes");
-                    if (inventory != null){
-                        inventory.addItem(name.getText(), info);
+                    if (inventory != null) {
+                        if (inventory.player.money - Integer.parseInt(number.getText()) > 0) {
+                            inventory.addItem(name.getText(), number.getText(), info);
+                            inventory.player.changeMoney(-Integer.parseInt(number.getText()));
+                        }
+
                     }
                 } else if (type.getButtonData() == ButtonBar.ButtonData.NO) {
                     System.out.println("You pressed No");

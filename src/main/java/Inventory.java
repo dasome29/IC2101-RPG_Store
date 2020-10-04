@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Inventory {
-    private StackPane pane;
-    private ArrayList<ItemInventory> items = new ArrayList<>();
+    public StackPane pane;
+    public ArrayList<ItemInventory> items = new ArrayList<>();
+    public Player player;
+    int price = 0;
 
-    public Inventory(StackPane pane) {
+    public Inventory(StackPane pane, Player player) {
         this.pane = pane;
+        this.player = player;
     }
 
     private boolean itemExist(String name) {
@@ -27,7 +30,7 @@ public class Inventory {
         return false;
     }
 
-    private ItemInventory getItem(String name){
+    private ItemInventory getItem(String name) {
         for (ItemInventory i :
                 items) {
             if (i.getName().equals(name)) return i;
@@ -35,13 +38,12 @@ public class Inventory {
         return null;
     }
 
-    public void addItem(String name, HashMap<String, Integer> info) {
-        if (itemExist(name)){
+    public void addItem(String name, String price, HashMap<String, Integer> info) {
+        if (itemExist(name)) {
             ItemInventory temp = getItem(name);
-            temp.number.setText( String.valueOf((Integer.parseInt(temp.number.getText()))+1));
-        }
-        else{
-            ItemInventory item = new ItemInventory(pane, name, "1", info);
+            temp.number.setText(String.valueOf((Integer.parseInt(temp.number.getText())) + 1));
+        } else {
+            ItemInventory item = new ItemInventory(this, name, Integer.parseInt(price), "1", info);
             if (items.size() == 0) {
                 item.setY(20);
             } else {
@@ -57,10 +59,16 @@ public class Inventory {
 
 class ItemInventory extends Item {
     private HashMap<String, Integer> info;
+    private ArrayList items;
+    private int price;
+    private Inventory inventory;
 
-    public ItemInventory(StackPane pane, String name, String number, HashMap<String, Integer> info) {
-        super(pane, name, number);
+    public ItemInventory(Inventory inventory, String name, int price, String number, HashMap<String, Integer> info) {
+        super(inventory.pane, name, number);
         this.info = info;
+        this.items = inventory.items;
+        this.price = (int) Math.round(price * 0.5);
+        this.inventory = inventory;
     }
 
     @Override
@@ -73,12 +81,21 @@ class ItemInventory extends Item {
             ButtonType sellButton = new ButtonType("Sell one", ButtonBar.ButtonData.NO);
             choose.getButtonTypes().setAll(equipButton, sellButton);
             choose.showAndWait().ifPresent(type -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
                 if (type.getButtonData() == ButtonBar.ButtonData.YES) {
-                    System.out.println("You Equipped this Item");
+                    if (!inventory.player.equip(info, name.getText())){
+                        Alert information = new Alert(Alert.AlertType.INFORMATION);
+                        information.setTitle("Ups...");
+                        information.setContentText("You already have this item equipped.");
+                        information.show();
+                    }else {
+                        System.out.println("Equipped " + name.getText());
+                        sell();
+                    }
                 } else if (type.getButtonData() == ButtonBar.ButtonData.NO) {
                     System.out.println("You Sold one item");
                     sell();
+                    inventory.player.changeMoney(price);
                 }
             });
         });
@@ -88,8 +105,8 @@ class ItemInventory extends Item {
         int num = Integer.parseInt(number.getText()) - 1;
         if (num <= 0) {
             pane.getChildren().removeAll(rectangle, number, name, infoImage, itemImage);
-        }
-        else {
+            items.remove(this);
+        } else {
             number.setText(String.valueOf(num));
         }
     }

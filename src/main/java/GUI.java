@@ -10,6 +10,7 @@ import javafx.scene.effect.Glow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.json.JSONObject;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,44 +31,38 @@ public class GUI {
     private MenuBar menuBar;
     private Inventory inventory;
 
+    private Player player = new Player(rightPane);
+
     public GUI(Pane root) {
         this.root = root;
         buyPane.setAlignment(Pos.TOP_LEFT);
         rightPane.setAlignment(Pos.TOP_LEFT);
         inventoryPane.setAlignment(Pos.TOP_LEFT);
-        inventory = new Inventory(inventoryPane);
-
-
+        inventory = new Inventory(inventoryPane, player);
         menuBar = new MenuBar(this.root, buyPane, inventoryPane, leftScrollPane);
         itemGenerator();
     }
 
-    private void itemGenerator(){
-        HashMap<String, Integer> names = new HashMap<>();
+    private void itemGenerator() {
+        String[] keys = {"B07Y5W29JN", "B088FDVFPT", "B07P9W5HJV", "B07QC6VKWB", "B07Y4ZYRQ3", "B00TJ9P1V6", "B07KBY2P6P",
+                "B0872QLW8W", "B07BHTV9VQ", "B07444854P", "B07RMKK1P3", "B07GJBBGHG", "B07N1HX72G", "B0719HYML3",
+                "B07ZX7H5XL"};
 
-        names.put("Chest", 400);
-        names.put("Boots", 200);
-        names.put("Speed Potion", 84);
-        names.put("Health Potion", 45);
-        names.put("Sword", 67);
-        names.put("Apple", 23);
-
-        for (String s :
-                names.keySet()) {
-            addItem(s, names.get(s));
+        for (int i = 0; i < 15; i++) {
+            addItem(keys[0]);
         }
     }
 
     private void configurePane(Pane pane, ScrollPane scrollPane, int x, int y) {
 
         if (scrollPane != null) {
-            pane.setPrefSize(400, 800);
-            scrollPane.setPrefSize(400, 600);
+            pane.setPrefSize(400, 1200);
+            scrollPane.setPrefSize(400, 530);
             scrollPane.setLayoutX(x);
             scrollPane.setLayoutY(y);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-            scrollPane.setVmax(2);
+            scrollPane.setVmax(4);
             scrollPane.setStyle("-fx-border-width: 3;-fx-border-radius: 4;");
             pane.setStyle("-fx-background-color: transparent;");
         } else {
@@ -80,7 +75,7 @@ public class GUI {
 
     }
 
-    private JsonNode getResponse(String key){
+    private JsonNode getResponse(String key) {
         System.out.print(key);
         HttpResponse<JsonNode> http = null;
         try {
@@ -95,66 +90,59 @@ public class GUI {
         return http.getBody();
     }
 
-    public JSONObject getInfo() {
-//        JsonNode response = getResponse("B07Y5W29JN");
+    public Item getInfo(String code) {
+//        JsonNode response = getResponse(code);
         HashMap<String, Integer> map = new HashMap<>();
 
-        JSONObject object = null;
+        String name = "";
+        int price = 0;
+
+        JSONObject object;
         JSONObject product;
         JSONObject rev;
         JSONObject prodInf;
         try {
             String content = new String(Files.readAllBytes(Paths.get("data.json")), StandardCharsets.UTF_8);
             object = new JSONObject(content);
-       //     object = response.getObject();
+            //     object = response.getObject();
             product = object.getJSONObject("product");
             rev = product.getJSONObject("reviews");
             prodInf = product.getJSONObject("product_information");
-            System.out.println(product);
             if (product.get("asin").equals("B07Y5W29JN")) {
-                System.out.println("Es una cuchara");
-                map.put("health", (int)prodInf.get("available_for_days")/3);
-                map.put("defense", (int )rev.get("total_reviews")/77);
-                map.put("speed",(int)prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images")*10);
-                map.put("special attack", (int )product.get("total_videos")+75);
+                name = "Silver Boots";
+                map.put("health", (int) prodInf.get("available_for_days") / 3);
+                map.put("defense", (int) rev.get("total_reviews") / 77);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 10);
+                map.put("special attack", (int) product.get("total_videos") + 75);
             }
             if (product.get("asin").equals("B088FDVFPT")) {
-                System.out.println("Es un album");
-                map.put("health", (int )prodInf.get("available_for_days")/2);
-                map.put("defense", (int )rev.get("total_reviews")/16);
-                map.put("speed", (int )prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images")*11);
-                map.put("special attack", (int )product.get("total_videos")+45);
+                name = "Golden Boots";
+                map.put("health", (int) prodInf.get("available_for_days") / 2);
+                map.put("defense", (int) rev.get("total_reviews") / 16);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 11);
+                map.put("special attack", (int) product.get("total_videos") + 45);
 
             }
-            if (product.get("asin").equals("B088FDVFPT")) {
-                //https://www.amazon.com/-/es/JYP-Twice-%C3%81lbum-Tarjetas-fotos/dp/B088FDVFPT/
-                System.out.println("Es un album");
-                // Sube proteccioón
-                System.out.println(rev);
-                map.put("health", (int )prodInf.get("available_for_days")/3);
-                map.put("defense", (int )rev.get("total_reviews")/95);
-                map.put("speed", (int )prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images")*9);
-                map.put("special attack", (int )product.get("total_videos")+64);
+            if (product.get("asin").equals("B07P9W5HJV")) {
+                name = "Green Boots";
+                map.put("health", (int) prodInf.get("available_for_days") / 3);
+                map.put("defense", (int) rev.get("total_reviews") / 95);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 9);
+                map.put("special attack", (int) product.get("total_videos") + 64);
             }
             if (product.get("asin").equals("B07QC6VKWB")) {
-                //https://www.amazon.com/-/es/Amazon-Brand-cer%C3%A1mica-interiores-pulgadas/dp/B07QC6VKWB/
-                System.out.println("Es una maceta");
-                // Sube proteccioón
-                System.out.println(rev);
+                name = "Health Potion";
                 map.put("health", (int) prodInf.get("available_for_days") / 3);
                 map.put("defense", (int) rev.get("total_reviews") / 63);
-                map.put("speed", (int) prodInf.get("available_for_months")*2);
+                map.put("speed", (int) prodInf.get("available_for_months") * 2);
                 map.put("attack", (int) product.get("total_images") * 13);
                 map.put("special attack", (int) product.get("total_videos") + 83);
             }
             if (product.get("asin").equals("B07Y4ZYRQ3")) {
-                //https://www.amazon.com/-/es/organizador-adhesivos-soporte-duradero-resistente/dp/B07Y4ZYRQ3/
-                System.out.println("Es un cable");
-                // Sube proteccioón
-                System.out.println(rev);
+                name = "Strength Potion";
                 map.put("health", (int) prodInf.get("available_for_days") / 3);
                 map.put("defense", (int) rev.get("total_reviews") / 9);
                 map.put("speed", (int) prodInf.get("available_for_months"));
@@ -163,31 +151,15 @@ public class GUI {
 
             }
             if (product.get("asin").equals("B00TJ9P1V6")) {
-                //https://www.amazon.com/medio-Porcelana-Extender-E26-Adaptador-extensi%C3%B3n/dp/B00TJ9P1V6/
-                System.out.println("Es un bombillo");
-                // Sube protección
-                System.out.println(rev);
+                name = "Speed Potion";
                 map.put("health", (int) prodInf.get("available_for_days") / 4);
                 map.put("defense", (int) rev.get("total_reviews") / 2);
                 map.put("speed", (int) prodInf.get("available_for_months"));
                 map.put("attack", (int) product.get("total_images") * 17);
                 map.put("special attack", (int) product.get("total_videos") + 82);
-                int protection = (int) product.get("total_images") * 17;
-                System.out.println(protection);
-                int defense = (int) rev.get("total_reviews") / 2;
-                System.out.println(defense);
-                int speed = (int) prodInf.get("available_for_months");
-                System.out.println(speed);
-                int health = (int) prodInf.get("available_for_days") / 4;
-                System.out.println(health);
-                int specialAttack = (int) product.get("total_videos") + 82;
-                System.out.println(specialAttack);
             }
             if (product.get("asin").equals("B07KBY2P6P")) {
-                //https://www.amazon.com/-/es/Ohvera-All-Occasions-Pantalones-bolsillos/dp/B07KBY2P6P/
-                System.out.println("Es un pantalon");
-                // Sube proteccioón
-                System.out.println(rev);
+                name = "Carbon Sword";
                 map.put("health", (int) prodInf.get("available_for_days") / 4);
                 map.put("defense", (int) rev.get("total_reviews") / 9);
                 map.put("speed", (int) prodInf.get("available_for_months"));
@@ -195,171 +167,92 @@ public class GUI {
                 map.put("special attack", (int) product.get("total_videos") + 49);
             }
             if (product.get("asin").equals("B0872QLW8W")) {
-                //https://www.amazon.com/KO-Skateboards-Monopat%C3%ADn-22-0-tibur%C3%B3n/dp/B0872QLW8W/
-                System.out.println("Es una patineta");
-                // Sube proteccioón
-                System.out.println(rev);
+                name = "Ice Sword";
+                map.put("health", (int) prodInf.get("available_for_days") / 2);
+                map.put("defense", (int) rev.get("total_reviews") / 3);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 4);
+                map.put("special attack", (int) product.get("total_videos") + 34);
+            }
+
+
+            if (product.get("asin").equals("B07BHTV9VQ")) {
+                name = "Fire Sword";
+                map.put("health", (int) prodInf.get("available_for_days") / 5);
+                map.put("defense", (int) rev.get("total_reviews") / 4);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") + 90);
+                map.put("special attack", (int) product.get("total_videos") + 90);
+            }
+
+
+            if (product.get("asin").equals("B07444854P")) {
+                name = "Wooden Shield";
+                map.put("health", (int) prodInf.get("available_for_days") / 8);
+                map.put("defense", (int) rev.get("total_reviews") / 90);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 3);
+                map.put("special attack", (int) product.get("total_videos") + 59);
+            }
+
+            if (product.get("asin").equals("B07RMKK1P3")) {
+                name = "Iron Shield";
+                map.put("health", (int) prodInf.get("available_for_days") / 8);
+                map.put("defense", (int) rev.get("total_reviews") / 2);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 9);
+                map.put("special attack", (int) product.get("total_videos") + 68);
+            }
+
+            if (product.get("asin").equals("B07GJBBGHG")) {
+                name = "Silver Shield";
+                map.put("health", (int) prodInf.get("available_for_days") / 2);
+                map.put("defense", (int) rev.get("total_reviews") / 100);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 6);
+                map.put("special attack", (int) product.get("total_videos") + 37);
+
+            }
+
+            if (product.get("asin").equals("B07N1HX72G")) {
+                name = "Golden Armour";
                 map.put("health", (int) prodInf.get("available_for_days") / 3);
                 map.put("defense", (int) rev.get("total_reviews") / 4);
                 map.put("speed", (int) prodInf.get("available_for_months"));
                 map.put("attack", (int) product.get("total_images") * 5);
                 map.put("special attack", (int) product.get("total_videos") + 97);
             }
+            if (product.get("asin").equals("B0719HYML3")) {
+                name = "Silver Armour";
+                map.put("health", (int) prodInf.get("available_for_days") / 2);
+                map.put("defense", (int) rev.get("total_reviews") / 81);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 5);
+                map.put("special attack", (int) product.get("total_videos") + 61);
+            }
+            if (product.get("asin").equals("B07ZX7H5XL")) {
+                name = "Leather Armour";
+                map.put("health", (int) prodInf.get("available_for_days") / 4);
+                map.put("defense", (int) rev.get("total_reviews") / 6);
+                map.put("speed", (int) prodInf.get("available_for_months"));
+                map.put("attack", (int) product.get("total_images") * 8);
+                map.put("special attack", (int) product.get("total_videos") + 82);
+            }
+            JSONObject priceVal = product.getJSONObject("price");
 
-
-            else if (product.get("asin").equals("B07BHTV9VQ")) {
-            //https://www.amazon.com/-/es/Dixie-pulgadas-unidades-exclusivo-desechables/dp/B07BHTV9VQ/
-            System.out.println("Es una plato");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 7;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 4;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 5;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 90;
-            System.out.println(specialAttack);
-        }
-
-
-            else if (product.get("asin").equals("B07444854P")) {
-            //https://www.amazon.com/-/es/Fila-Disruptor-II-Zapato-deportivo/dp/B07444854P/
-            System.out.println("Es un zapato");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 3;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 90;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 8;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 59;
-            System.out.println(specialAttack);
-        }
-
-            else if (product.get("asin").equals("B07RMKK1P3")) {
-            //https://www.amazon.com/-/es/Anime-Poke-Pachirisu-Mu%C3%B1eca-peluche/dp/B07RMKK1P3/
-            System.out.println("Es un peluche");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 9;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 2;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 8;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 68;
-            System.out.println(specialAttack);
-        }
-
-            else if (product.get("asin").equals("B07GJBBGHG")) {
-            //https://www.amazon.com/COSORI-Electric-Reminder-Touchscreen-Certified/dp/B07GJBBGHG/
-            System.out.println("Es una freidora");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 6;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") /100 ;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 2;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 37;
-            System.out.println(specialAttack);
-        }
-
-            else if (product.get("asin").equals("B0872QLW8W")) {
-            //https://www.amazon.com/KO-Skateboards-Monopat%C3%ADn-22-0-tibur%C3%B3n/dp/B0872QLW8W/
-            System.out.println("Es una patineta");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 5;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 4;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 3;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 97;
-            System.out.println(specialAttack);
-
-        }
-            else if (product.get("asin").equals("B07N1HX72G")) {
-            //https://www.amazon.com/PHOPOLLO-Dimmable-Controller-Non-Waterproof-Decoration/dp/B07N1HX72G/
-            System.out.println("Son unas luces");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 5;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 4;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 3;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 97;
-            System.out.println(specialAttack);
-
-        }
-            else if (product.get("asin").equals("B0719HYML3")) {
-            //https://www.amazon.com/Biotina-Amazon-Elements-vegana-c%C3%A1psulas/dp/B0719HYML3/
-            System.out.println("Es una biotina");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 5;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 81;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 2;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 61;
-            System.out.println(specialAttack);
-
-        }
-            else if (product.get("asin").equals("B07ZX7H5XL")) {
-            //https://www.amazon.com/dp/B07ZX7H5XL/
-            System.out.println("Es un masajeador");
-            // Sube proteccioón
-            System.out.println(rev);
-            int protection = (int) product.get("total_images") * 5;
-            System.out.println(protection);
-            int defense = (int) rev.get("total_reviews") / 4;
-            System.out.println(defense);
-            int speed = (int) prodInf.get("available_for_months");
-            System.out.println(speed);
-            int health = (int) prodInf.get("available_for_days") / 3;
-            System.out.println(health);
-            int specialAttack = (int) product.get("total_videos") + 97;
-            System.out.println(specialAttack);
-        }
-
+            price = (int)Math.round((Double) priceVal.get("current_price")) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return object;
-    }
-
-    private void addItem(String name, int price) {
-        HashMap<String, Integer> map = new HashMap<>();
-
-        map.put("health", 30);
-        map.put("attack", -5);
-        map.put("speed", 10);
 
         Item item = new Item(buyPane, name, String.valueOf(price));
-        item.setInventory(inventory);
         item.setInfo(map);
+        return item;
+    }
+
+    private void addItem(String key) {
+        Item item = getInfo(key);
+        item.setInventory(inventory);
         if (items.size() == 0) {
             item.setY(20);
         } else {
