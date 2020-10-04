@@ -9,16 +9,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.FileNotFoundException;
+
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class GUI {
     private Pane root;
@@ -27,22 +27,37 @@ public class GUI {
     private StackPane rightPane = new StackPane();
     private StackPane inventoryPane = new StackPane();
     private ScrollPane leftScrollPane = new ScrollPane(buyPane);
-    private Button newItemButton = new Button("New Item");
     private ArrayList<Item> items = new ArrayList<>();
     private MenuBar menuBar;
+    private Inventory inventory;
 
     public GUI(Pane root) {
         this.root = root;
         label = new Label("HOLAAAAA");
         buyPane.setAlignment(Pos.TOP_LEFT);
         rightPane.setAlignment(Pos.TOP_LEFT);
-        newItemButton.setOnMouseClicked(mouseEvent -> {
-            System.out.println("Adding an Item.");
+        inventoryPane.setAlignment(Pos.TOP_LEFT);
+        inventory = new Inventory(inventoryPane);
 
-            addItem();
 
-        });
         menuBar = new MenuBar(this.root, buyPane, inventoryPane, leftScrollPane);
+        itemGenerator();
+    }
+
+    private void itemGenerator(){
+        HashMap<String, Integer> names = new HashMap<>();
+
+        names.put("Chest", 400);
+        names.put("Boots", 200);
+        names.put("Speed Potion", 84);
+        names.put("Health Potion", 45);
+        names.put("Sword", 67);
+        names.put("Apple", 23);
+
+        for (String s :
+                names.keySet()) {
+            addItem(s, names.get(s));
+        }
     }
 
     private void configurePane(Pane pane, ScrollPane scrollPane, int x, int y) {
@@ -67,10 +82,10 @@ public class GUI {
 
     }
 
-    private JsonNode getResponse(String key){
+    private JsonNode getResponse(String key) {
         HttpResponse<JsonNode> http = null;
         try {
-            http = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin="+key)
+            http = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin=" + key)
                     .header("x-rapidapi-host", "amazon-product-reviews-keywords.p.rapidapi.com")
                     .header("x-rapidapi-key", "203c5afef0msh42f0cc1f3c0f465p1048b2jsn6e07fdc34ead")
                     .asJson();
@@ -81,7 +96,7 @@ public class GUI {
         return http.getBody();
     }
 
-    public JSONObject getInfo(){
+    public JSONObject getInfo() {
 //        JsonNode response = getResponse("B07Y5W29JN");
         JSONObject object = null;
         JSONObject product;
@@ -92,7 +107,7 @@ public class GUI {
 //            object = response.getObject();
             product = object.getJSONObject("product");
             System.out.println(product.get("asin"));
-            if (product.get("asin").equals("B07Y5W29JN")){
+            if (product.get("asin").equals("B07Y5W29JN")) {
                 // Sube proteccioón
                 int protection = (int) product.get("ranking") / 2;
                 System.out.println("Es una cuchara");
@@ -103,26 +118,29 @@ public class GUI {
         return object;
     }
 
-    private void addItem(){
-        Item rectangle = new Item(buyPane);
+    private void addItem(String name, int price) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        map.put("health", 30);
+        map.put("attack", -5);
+        map.put("speed", 10);
+
+        Item item = new Item(buyPane, name, String.valueOf(price));
+        item.setInventory(inventory);
+        item.setInfo(map);
         if (items.size() == 0) {
-            rectangle.setY(20);
+            item.setY(20);
         } else {
-            rectangle.setY(items.get(items.size() - 1).getY() + 70);
+            item.setY(items.get(items.size() - 1).getY() + 70);
         }
-        rectangle.setX(20);
-        items.add(rectangle);
+        item.setX(20);
+        items.add(item);
     }
 
     public void display() {
-
         configurePane(buyPane, leftScrollPane, 0, 70);
         configurePane(inventoryPane, leftScrollPane, 0, 70);
         configurePane(rightPane, null, 400, 0);
-        newItemButton.setTranslateX(160);
-        newItemButton.setTranslateY(50);
-        rightPane.getChildren().addAll(newItemButton);
-
         root.getChildren().addAll(leftScrollPane, rightPane);
     }
 }

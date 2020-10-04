@@ -1,53 +1,43 @@
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.util.HashMap;
 
 public class Item {
-    private StackPane pane;
+    protected StackPane pane;
     private int x;
     private int y;
-    private Rectangle rectangle;
-    private ImageView itemImage;
-    private ImageView infoImage;
+    protected Rectangle rectangle;
+    protected ImageView itemImage;
+    protected ImageView infoImage;
     private StatsPreview stats;
+    protected Text name;
+    public Text number;
+    private Inventory inventory;
+    private HashMap<String, Integer> info;
 
-    public Item(StackPane pane) {
+    public Item(StackPane pane, String name, String number) {
         this.pane = pane;
-        rectangle = new Rectangle(350.0D, 60.0D);
-        rectangle.setArcHeight(60);
-        rectangle.setArcWidth(40);
-        rectangle.setFill(javafx.scene.paint.Color.rgb(126, 217, 244));
-        rectangle.setStrokeWidth(3);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setOnMouseClicked(event -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Buying Item...");
-            alert.setContentText("Do you want to buy this Item?");
-            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-            ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-
-            alert.getButtonTypes().setAll(yesButton, noButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.getButtonData() == ButtonBar.ButtonData.YES) {
-                    System.out.println("You pressed Yes");
-                } else if (type.getButtonData() == ButtonBar.ButtonData.NO) {
-                    System.out.println("You pressed No");
-                }
-            });
-        });
-        URL itemImagePath = getClass().getResource("A_Armor04.png");
-        itemImage = new ImageView(itemImagePath.toString());
-        infoImage = new ImageView(getClass().getResource("info.png").toString());
+        this.rectangle = new Rectangle(350.0D, 60.0D);
+        this.name = new Text(name);
+        this.number = new Text(number);
+        this.name.setStyle("-fx-background-color: transparent;");
+        this.rectangle.setArcHeight(60);
+        this.rectangle.setArcWidth(40);
+        this.rectangle.setFill(javafx.scene.paint.Color.rgb(126, 217, 244));
+        this.rectangle.setStrokeWidth(3);
+        this.rectangle.setStroke(Color.BLACK);
+        this.itemImage = new ImageView(getClass().getResource("A_Armor04.png").toString());
+        this.infoImage = new ImageView(getClass().getResource("info.png").toString());
         imageSettings();
-        this.pane.getChildren().addAll(rectangle, itemImage, infoImage);
+        setAlert();
+        this.pane.getChildren().addAll(rectangle, itemImage, infoImage, this.name, this.number);
 
     }
 
@@ -57,6 +47,8 @@ public class Item {
         itemImage.setTranslateX(this.x + 30);
         infoImage.setTranslateX(this.x + 290);
         stats.setX(this.x + 290);
+        name.setTranslateX(this.x + 100);
+        number.setTranslateX(this.x + 200);
     }
 
     public void setY(int y) {
@@ -65,6 +57,16 @@ public class Item {
         itemImage.setTranslateY(this.y + 5);
         infoImage.setTranslateY(this.y + 5);
         stats.setY(this.y + 5);
+        name.setTranslateY(this.y + 20);
+        number.setTranslateY(this.y + 20);
+    }
+
+    public void setInventory(Inventory inventory){
+        this.inventory = inventory;
+    }
+
+    public void setInfo(HashMap<String, Integer> info) {
+        this.info = info;
     }
 
     public int getX() {
@@ -73,6 +75,10 @@ public class Item {
 
     public int getY() {
         return y;
+    }
+
+    public String getName(){
+        return name.getText();
     }
 
     private void imageSettings() {
@@ -86,6 +92,28 @@ public class Item {
         });
         infoImage.setOnMouseExited(event -> {
             stats.hide();
+        });
+    }
+
+    protected void setAlert() {
+        rectangle.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Buying Item...");
+            alert.setContentText("Do you want to buy this Item?");
+            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+            ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+
+            alert.getButtonTypes().setAll(yesButton, noButton);
+            alert.showAndWait().ifPresent(type -> {
+                if (type.getButtonData() == ButtonBar.ButtonData.YES) {
+                    System.out.println("You pressed Yes");
+                    if (inventory != null){
+                        inventory.addItem(name.getText(), info);
+                    }
+                } else if (type.getButtonData() == ButtonBar.ButtonData.NO) {
+                    System.out.println("You pressed No");
+                }
+            });
         });
     }
 }

@@ -24,12 +24,7 @@ public class Main extends Application {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT)));
         gui.display();
-
-
-        gui.getInfo();
-
-
-
+//        gui.getInfo();
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("style.css").toString());
         primaryStage.setScene(scene);
