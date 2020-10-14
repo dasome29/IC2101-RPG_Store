@@ -20,7 +20,7 @@ public class Item {
     protected Text name;
     public Text number;
     private Inventory inventory;
-    private HashMap<String, Integer> info;
+    private HashMap<String, Double> info;
 
     public Item(StackPane pane, String name, String number) {
         this.pane = pane;
@@ -34,7 +34,7 @@ public class Item {
         this.rectangle.setFill(javafx.scene.paint.Color.rgb(126, 217, 244));
         this.rectangle.setStrokeWidth(3);
         this.rectangle.setStroke(Color.BLACK);
-        this.itemImage = new ImageView(getClass().getResource("A_Armor04.png").toString());
+        this.itemImage = new ImageView(getClass().getResource(name + ".png").toString());
         this.infoImage = new ImageView(getClass().getResource("info.png").toString());
         imageSettings();
         setAlert();
@@ -64,10 +64,12 @@ public class Item {
 
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
+        stats.setInventory(this.inventory);
     }
 
-    public void setInfo(HashMap<String, Integer> info) {
+    public void setInfo(HashMap<String, Double> info) {
         this.info = info;
+        stats.setInfo(this.info);
     }
 
     public int getX() {
@@ -87,7 +89,7 @@ public class Item {
         infoImage.setFitWidth(50);
         itemImage.setFitHeight(50);
         itemImage.setFitWidth(50);
-        stats = new StatsPreview(inventory);
+        stats = new StatsPreview();
         infoImage.setOnMouseEntered(event -> {
             stats.show();
         });
@@ -109,9 +111,9 @@ public class Item {
                 if (type.getButtonData() == ButtonBar.ButtonData.YES) {
                     System.out.println("You pressed Yes");
                     if (inventory != null) {
-                        if (inventory.player.money - Integer.parseInt(number.getText()) > 0) {
+                        if (inventory.player.money - Double.parseDouble(number.getText()) > 0) {
                             inventory.addItem(name.getText(), number.getText(), info);
-                            inventory.player.changeMoney(-Integer.parseInt(number.getText()));
+                            inventory.player.changeMoney(-Double.parseDouble(number.getText()));
                         }
 
                     }
@@ -125,12 +127,18 @@ public class Item {
 
 class StatsPreview {
     private Inventory inventory;
-    private Label label = new Label("Stats Here");
+    private HashMap<String, Double> info;
     private int x;
 
-    public StatsPreview(Inventory inventory) {
-        this.inventory = inventory;
+    public StatsPreview() {
+    }
 
+    public void setInfo(HashMap<String, Double> info) {
+        this.info = info;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public int getX() {
@@ -154,10 +162,10 @@ class StatsPreview {
     private int y;
 
     public void show() {
-
+        inventory.player.stats.showPreviews(info);
     }
 
     public void hide() {
-
+        inventory.player.stats.hidePreviews();
     }
 }

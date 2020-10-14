@@ -38,18 +38,20 @@ public class Inventory {
         return null;
     }
 
-    public void addItem(String name, String price, HashMap<String, Integer> info) {
+    public void addItem(String name, String price, HashMap<String, Double> info) {
         if (itemExist(name)) {
             ItemInventory temp = getItem(name);
-            temp.number.setText(String.valueOf((Integer.parseInt(temp.number.getText())) + 1));
+            temp.number.setText(String.valueOf((Double.parseDouble(temp.number.getText())) + 1));
         } else {
-            ItemInventory item = new ItemInventory(this, name, Integer.parseInt(price), "1", info);
+            ItemInventory item = new ItemInventory(this, name, Double.parseDouble(price), "1", info);
             if (items.size() == 0) {
                 item.setY(20);
             } else {
                 item.setY(items.get(items.size() - 1).getY() + 70);
             }
             item.setX(20);
+            item.setInfo(info);
+            item.setInventory(this);
             items.add(item);
         }
 
@@ -58,12 +60,12 @@ public class Inventory {
 }
 
 class ItemInventory extends Item {
-    private HashMap<String, Integer> info;
+    private HashMap<String, Double> info;
     private ArrayList items;
     private int price;
     private Inventory inventory;
 
-    public ItemInventory(Inventory inventory, String name, int price, String number, HashMap<String, Integer> info) {
+    public ItemInventory(Inventory inventory, String name, double price, String number, HashMap<String, Double> info) {
         super(inventory.pane,name, number);
         this.info = info;
         this.items = inventory.items;

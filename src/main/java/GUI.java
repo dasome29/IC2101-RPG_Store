@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,9 +48,18 @@ public class GUI {
         String[] keys = {"B07Y5W29JN", "B088FDVFPT", "B07P9W5HJV", "B07QC6VKWB", "B07Y4ZYRQ3", "B00TJ9P1V6", "B07KBY2P6P",
                 "B0872QLW8W", "B07BHTV9VQ", "B07444854P", "B07RMKK1P3", "B07GJBBGHG", "B07N1HX72G", "B0719HYML3",
                 "B07ZX7H5XL"};
-
         for (String key : keys) {
+            Timestamp start = new Timestamp(System.currentTimeMillis());
             addItem(key);
+            Timestamp finish = new Timestamp(System.currentTimeMillis());
+            long time = finish.getTime()-start.getTime();
+            if (time < 1500){
+                try {
+                    Thread.sleep(2000 - time);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -76,12 +86,12 @@ public class GUI {
     }
 
     private JsonNode getResponse(String key) {
-        System.out.print(key);
+        System.out.println(key);
         HttpResponse<JsonNode> http = null;
         try {
             http = Unirest.get("https://amazon-product-reviews-keywords.p.rapidapi.com/product/details?country=US&asin=" + key)
                     .header("x-rapidapi-host", "amazon-product-reviews-keywords.p.rapidapi.com")
-                    .header("x-rapidapi-key", "203c5afef0msh42f0cc1f3c0f465p1048b2jsn6e07fdc34ead")
+                    .header("x-rapidapi-key",  "05d74dab7emsh129ed1cb06b927ep17a34bjsna98f0f47a236")
                     .asJson();
         } catch (UnirestException e) {
             e.printStackTrace();
@@ -92,159 +102,164 @@ public class GUI {
     }
 
     public Item getInfo(String code) {
-//        JsonNode response = getResponse(code);
-        HashMap<String, Integer> map = new HashMap<>();
+        JsonNode response = getResponse(code);
+        System.out.println(response);
+        HashMap<String, Double> map = new HashMap<>();
 
         String name = "";
-        int price = 0;
+        double price = 0.0;
 
         JSONObject object;
         JSONObject product;
         JSONObject rev;
         JSONObject prodInf;
-        try {
-            String content = Files.readString(Paths.get("data.json"));
-            object = new JSONObject(content);
-            //     object = response.getObject();
-            product = object.getJSONObject("product");
-            rev = product.getJSONObject("reviews");
-            prodInf = product.getJSONObject("product_information");
-            if (product.get("asin").equals("B07Y5W29JN")) {
-                name = "Silver Boots";
-                map.put("health", (int) prodInf.get("available_for_days") / 3);
-                map.put("defense", (int) rev.get("total_reviews") / 77);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 10);
-                map.put("special attack", (int) product.get("total_videos") + 75);
-            }
-            if (product.get("asin").equals("B088FDVFPT")) {
-                name = "Golden Boots";
-                map.put("health", (int) prodInf.get("available_for_days") / 2);
-                map.put("defense", (int) rev.get("total_reviews") / 16);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 11);
-                map.put("special attack", (int) product.get("total_videos") + 45);
-
-            }
-            if (product.get("asin").equals("B07P9W5HJV")) {
-                name = "Green Boots";
-                map.put("health", (int) prodInf.get("available_for_days") / 3);
-                map.put("defense", (int) rev.get("total_reviews") / 95);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 9);
-                map.put("special attack", (int) product.get("total_videos") + 64);
-            }
-            if (product.get("asin").equals("B07QC6VKWB")) {
-                name = "Health Potion";
-                map.put("health", (int) prodInf.get("available_for_days") / 3);
-                map.put("defense", (int) rev.get("total_reviews") / 63);
-                map.put("speed", (int) prodInf.get("available_for_months") * 2);
-                map.put("attack", (int) product.get("total_images") * 13);
-                map.put("special attack", (int) product.get("total_videos") + 83);
-            }
-            if (product.get("asin").equals("B07Y4ZYRQ3")) {
-                name = "Strength Potion";
-                map.put("health", (int) prodInf.get("available_for_days") / 3);
-                map.put("defense", (int) rev.get("total_reviews") / 9);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 12);
-                map.put("special attack", (int) product.get("total_videos") + 91);
-
-            }
-            if (product.get("asin").equals("B00TJ9P1V6")) {
-                name = "Speed Potion";
-                map.put("health", (int) prodInf.get("available_for_days") / 4);
-                map.put("defense", (int) rev.get("total_reviews") / 2);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 17);
-                map.put("special attack", (int) product.get("total_videos") + 82);
-            }
-            if (product.get("asin").equals("B07KBY2P6P")) {
-                name = "Carbon Sword";
-                map.put("health", (int) prodInf.get("available_for_days") / 4);
-                map.put("defense", (int) rev.get("total_reviews") / 9);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 3);
-                map.put("special attack", (int) product.get("total_videos") + 49);
-            }
-            if (product.get("asin").equals("B0872QLW8W")) {
-                name = "Ice Sword";
-                map.put("health", (int) prodInf.get("available_for_days") / 2);
-                map.put("defense", (int) rev.get("total_reviews") / 3);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 4);
-                map.put("special attack", (int) product.get("total_videos") + 34);
-            }
-
-
-            if (product.get("asin").equals("B07BHTV9VQ")) {
-                name = "Fire Sword";
-                map.put("health", (int) prodInf.get("available_for_days") / 5);
-                map.put("defense", (int) rev.get("total_reviews") / 4);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") + 90);
-                map.put("special attack", (int) product.get("total_videos") + 90);
-            }
-
-
-            if (product.get("asin").equals("B07444854P")) {
-                name = "Wooden Shield";
-                map.put("health", (int) prodInf.get("available_for_days") / 8);
-                map.put("defense", (int) rev.get("total_reviews") / 90);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 3);
-                map.put("special attack", (int) product.get("total_videos") + 59);
-            }
-
-            if (product.get("asin").equals("B07RMKK1P3")) {
-                name = "Iron Shield";
-                map.put("health", (int) prodInf.get("available_for_days") / 8);
-                map.put("defense", (int) rev.get("total_reviews") / 2);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 9);
-                map.put("special attack", (int) product.get("total_videos") + 68);
-            }
-
-            if (product.get("asin").equals("B07GJBBGHG")) {
-                name = "Silver Shield";
-                map.put("health", (int) prodInf.get("available_for_days") / 2);
-                map.put("defense", (int) rev.get("total_reviews") / 100);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 6);
-                map.put("special attack", (int) product.get("total_videos") + 37);
-
-            }
-
-            if (product.get("asin").equals("B07N1HX72G")) {
-                name = "Golden Armour";
-                map.put("health", (int) prodInf.get("available_for_days") / 3);
-                map.put("defense", (int) rev.get("total_reviews") / 4);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 5);
-                map.put("special attack", (int) product.get("total_videos") + 97);
-            }
-            if (product.get("asin").equals("B0719HYML3")) {
-                name = "Silver Armour";
-                map.put("health", (int) prodInf.get("available_for_days") / 2);
-                map.put("defense", (int) rev.get("total_reviews") / 81);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 5);
-                map.put("special attack", (int) product.get("total_videos") + 61);
-            }
-            if (product.get("asin").equals("B07ZX7H5XL")) {
-                name = "Leather Armour";
-                map.put("health", (int) prodInf.get("available_for_days") / 4);
-                map.put("defense", (int) rev.get("total_reviews") / 6);
-                map.put("speed", (int) prodInf.get("available_for_months"));
-                map.put("attack", (int) product.get("total_images") * 8);
-                map.put("special attack", (int) product.get("total_videos") + 82);
-            }
-            JSONObject priceVal = product.getJSONObject("price");
-
-            price = (int)Math.round((Double) priceVal.get("current_price")) ;
-        } catch (IOException e) {
-            e.printStackTrace();
+//        String content = null;
+//        try {
+//            content = Files.readString(Paths.get("data.json"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        object = new JSONObject(content);
+        object = response.getObject();
+        product = object.getJSONObject("product");
+        rev = product.getJSONObject("reviews");
+        prodInf = product.getJSONObject("product_information");
+        if (product.get("asin").equals("B07Y5W29JN")) {
+            name = "Silver Boots";
+            map.put("health", prodInf.getDouble("available_for_days") / 3);
+            map.put("defense", rev.getDouble("total_reviews") / 77);
+            map.put("speed", prodInf.getDouble("available_for_months"));
+            map.put("attack", product.getDouble("total_images") * 10);
+            map.put("special attack", product.getDouble("total_videos") + 75);
         }
+        if (product.get("asin").equals("B088FDVFPT")) {
+            name = "Golden Boots";
+            map.put("health",  prodInf.getDouble("available_for_days") / 2);
+            map.put("defense",  rev.getDouble("total_reviews") / 16);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 11);
+            map.put("special attack",  product.getDouble("total_videos") + 45);
+
+        }
+        if (product.get("asin").equals("B07P9W5HJV")) {
+            name = "Green Boots";
+            map.put("health",  prodInf.getDouble("available_for_days") / 3);
+            map.put("defense",  rev.getDouble("total_reviews") / 95);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 9);
+            map.put("special attack",  product.getDouble("total_videos") + 64);
+        }
+        if (product.get("asin").equals("B07QC6VKWB")) {
+            name = "Health Potion";
+            map.put("health",  prodInf.getDouble("available_for_days") / 3);
+            map.put("defense",  rev.getDouble("total_reviews") / 63);
+            map.put("speed",  prodInf.getDouble("available_for_months") * 2);
+            map.put("attack",  product.getDouble("total_images") * 13);
+            map.put("special attack",  product.getDouble("total_videos") + 83);
+        }
+        if (product.get("asin").equals("B07Y4ZYRQ3")) {
+            name = "Strength Potion";
+            map.put("health",  prodInf.getDouble("available_for_days") / 3);
+            map.put("defense",  rev.getDouble("total_reviews") / 9);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 12);
+            map.put("special attack",  product.getDouble("total_videos") + 91);
+
+        }
+        if (product.get("asin").equals("B00TJ9P1V6")) {
+            name = "Speed Potion";
+            map.put("health",  prodInf.getDouble("available_for_days") / 4);
+            map.put("defense",  rev.getDouble("total_reviews") / 2);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 17);
+            map.put("special attack",  product.getDouble("total_videos") + 82);
+        }
+        if (product.get("asin").equals("B07KBY2P6P")) {
+            name = "Carbon Sword";
+            map.put("health",  prodInf.getDouble("available_for_days") / 4);
+            map.put("defense",  rev.getDouble("total_reviews") / 9);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 3);
+            map.put("special attack",  product.getDouble("total_videos") + 49);
+        }
+        if (product.get("asin").equals("B0872QLW8W")) {
+            name = "Ice Sword";
+            map.put("health",  prodInf.getDouble("available_for_days") / 2);
+            map.put("defense",  rev.getDouble("total_reviews") / 3);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 4);
+            map.put("special attack",  product.getDouble("total_videos") + 34);
+        }
+
+
+        if (product.get("asin").equals("B07BHTV9VQ")) {
+            name = "Fire Sword";
+            map.put("health",  prodInf.getDouble("available_for_days") / 5);
+            map.put("defense",  rev.getDouble("total_reviews") / 4);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") + 90);
+            map.put("special attack",  product.getDouble("total_videos") + 90);
+        }
+
+
+        if (product.get("asin").equals("B07444854P")) {
+            name = "Wooden Shield";
+            map.put("health",  prodInf.getDouble("available_for_days") / 8);
+            map.put("defense",  rev.getDouble("total_reviews") / 90);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 3);
+            map.put("special attack",  product.getDouble("total_videos") + 59);
+        }
+
+        if (product.get("asin").equals("B07RMKK1P3")) {
+            name = "Iron Shield";
+            map.put("health",  prodInf.getDouble("available_for_days") / 8);
+            map.put("defense",  rev.getDouble("total_reviews") / 2);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 9);
+            map.put("special attack",  product.getDouble("total_videos") + 68);
+        }
+
+        if (product.get("asin").equals("B07GJBBGHG")) {
+            name = "Silver Shield";
+            map.put("health",  prodInf.getDouble("available_for_days") / 2);
+            map.put("defense",  rev.getDouble("total_reviews") / 100);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 6);
+            map.put("special attack",  product.getDouble("total_videos") + 37);
+
+        }
+
+        if (product.get("asin").equals("B07N1HX72G")) {
+            name = "Golden Armour";
+            map.put("health",  prodInf.getDouble("available_for_days") / 3);
+            map.put("defense",  rev.getDouble("total_reviews") / 4);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 5);
+            map.put("special attack",  product.getDouble("total_videos") + 97);
+        }
+        if (product.get("asin").equals("B0719HYML3")) {
+            name = "Silver Armour";
+            map.put("health",  prodInf.getDouble("available_for_days") / 2);
+            map.put("defense",  rev.getDouble("total_reviews") / 81);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 5);
+            map.put("special attack",  product.getDouble("total_videos") + 61);
+        }
+        if (product.get("asin").equals("B07ZX7H5XL")) {
+            name = "Leather Armour";
+            map.put("health",  prodInf.getDouble("available_for_days") / 4);
+            map.put("defense",  rev.getDouble("total_reviews") / 6);
+            map.put("speed",  prodInf.getDouble("available_for_months"));
+            map.put("attack",  product.getDouble("total_images") * 8);
+            map.put("special attack", product.getDouble("total_videos") + 82);
+        }
+
+        JSONObject priceVal = product.getJSONObject("price");
+
+
+
+        price = priceVal.getDouble("current_price") ;
 
         Item item = new Item(buyPane,name, String.valueOf(price));
         item.setInfo(map);
