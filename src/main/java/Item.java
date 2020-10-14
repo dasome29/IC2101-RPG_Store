@@ -24,6 +24,7 @@ public class Item {
 
     public Item(StackPane pane, String name, String number) {
         this.pane = pane;
+
         this.rectangle = new Rectangle(350.0D, 60.0D);
         this.name = new Text(name);
         this.number = new Text(number);
@@ -86,7 +87,7 @@ public class Item {
         infoImage.setFitWidth(50);
         itemImage.setFitHeight(50);
         itemImage.setFitWidth(50);
-        stats = new StatsPreview(pane);
+        stats = new StatsPreview(inventory);
         infoImage.setOnMouseEntered(event -> {
             stats.show();
         });
@@ -123,10 +124,14 @@ public class Item {
 }
 
 class StatsPreview {
-    private StackPane pane;
-    private ImageView dialogImage;
+    private Inventory inventory;
     private Label label = new Label("Stats Here");
     private int x;
+
+    public StatsPreview(Inventory inventory) {
+        this.inventory = inventory;
+
+    }
 
     public int getX() {
         return x;
@@ -134,7 +139,7 @@ class StatsPreview {
 
     public void setX(int x) {
         this.x = x;
-        dialogImage.setTranslateX(this.x - 180);
+
     }
 
     public int getY() {
@@ -143,29 +148,16 @@ class StatsPreview {
 
     public void setY(int y) {
         this.y = y;
-        dialogImage.setTranslateY(this.y + 20);
+
     }
 
     private int y;
 
-    public StatsPreview(StackPane pane) {
-        this.pane = pane;
-        dialogImage = new ImageView(getClass().getResource("dialog.png").toString());
-        dialogImage.setScaleX(-1);
-        dialogImage.setRotate(180);
-        dialogImage.setFitWidth(150);
-        dialogImage.setFitHeight(100);
-        dialogImage.setVisible(false);
-
-        this.pane.getChildren().addAll(dialogImage);
-    }
-
     public void show() {
-        dialogImage.setVisible(true);
-        dialogImage.toFront();
+
     }
 
     public void hide() {
-        dialogImage.setVisible(false);
+
     }
 }

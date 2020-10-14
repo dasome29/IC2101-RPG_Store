@@ -64,7 +64,7 @@ class ItemInventory extends Item {
     private Inventory inventory;
 
     public ItemInventory(Inventory inventory, String name, int price, String number, HashMap<String, Integer> info) {
-        super(inventory.pane, name, number);
+        super(inventory.pane,name, number);
         this.info = info;
         this.items = inventory.items;
         this.price = (int) Math.round(price * 0.5);

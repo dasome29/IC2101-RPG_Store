@@ -48,8 +48,8 @@ public class GUI {
                 "B0872QLW8W", "B07BHTV9VQ", "B07444854P", "B07RMKK1P3", "B07GJBBGHG", "B07N1HX72G", "B0719HYML3",
                 "B07ZX7H5XL"};
 
-        for (int i = 0; i < 15; i++) {
-            addItem(keys[0]);
+        for (String key : keys) {
+            addItem(key);
         }
     }
 
@@ -87,6 +87,7 @@ public class GUI {
             e.printStackTrace();
         }
 
+        assert http != null;
         return http.getBody();
     }
 
@@ -102,7 +103,7 @@ public class GUI {
         JSONObject rev;
         JSONObject prodInf;
         try {
-            String content = new String(Files.readAllBytes(Paths.get("data.json")), StandardCharsets.UTF_8);
+            String content = Files.readString(Paths.get("data.json"));
             object = new JSONObject(content);
             //     object = response.getObject();
             product = object.getJSONObject("product");
@@ -245,7 +246,7 @@ public class GUI {
             e.printStackTrace();
         }
 
-        Item item = new Item(buyPane, name, String.valueOf(price));
+        Item item = new Item(buyPane,name, String.valueOf(price));
         item.setInfo(map);
         return item;
     }
@@ -315,8 +316,8 @@ class MenuBar {
         });
         menuBar.setStyle("-fx-background-color: rgba(0,100,100,0.5);-fx-border-color: lightgrey;-fx-border-width: 3;");
         menuBar.setPrefSize(400, 70);
-        buyButton.setStyle("-fx-text-fill: goldenrod; -fx-font: italic 20 \"serif\"; -fx-background-color: transparent; -fx-text-alignment: right; -fx-alignment: center;-fx-border-color: lightgrey;-fx-border-width: 1;");
-        inventoryButton.setStyle("-fx-text-fill: goldenrod; -fx-font: italic 20 \"serif\"; -fx-background-color: transparent; -fx-text-alignment: right; -fx-alignment: center;-fx-border-color: lightgrey;-fx-border-width: 1;");
+        buyButton.setStyle("-fx-text-fill: goldenrod; -fx-font: italic 20 \"serif\"; -fx-background-color: transparent; -fx-text-alignment: right; -fx-alignment: center;-fx-border-color: lightgrey;-fx-border-width: 0.5;");
+        inventoryButton.setStyle("-fx-text-fill: goldenrod; -fx-font: italic 20 \"serif\"; -fx-background-color: transparent; -fx-text-alignment: right; -fx-alignment: center;-fx-border-color: lightgrey;-fx-border-width: 0.5;");
         root.getChildren().addAll(menuBar);
     }
 

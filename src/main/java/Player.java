@@ -1,8 +1,15 @@
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import javafx.scene.image.ImageView;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -20,9 +27,11 @@ public class Player {
 
         this.stats = new Stats(pane);
 
-        moneyText.setTranslateX(200);
+        moneyText.setTranslateX(130);
         moneyText.setTranslateY(50);
-
+        moneyText.setFont(Font.font(null, FontWeight.BOLD, 32));
+        moneyText.setStrokeWidth(2);
+        moneyText.setStroke(Color.GRAY);
         changeMoney(0);
 
         this.pane = pane;
@@ -38,7 +47,7 @@ public class Player {
     }
     public void changeMoney(int money){
         this.money = this.money + money;
-        moneyText.setText(String.valueOf(this.money) );
+        moneyText.setText("$ " + String.valueOf(this.money) );
     }
 }
 
@@ -51,7 +60,7 @@ class Stats{
     private Text attack = new Text();
     private Text speed = new Text();
     private Text specialAttack = new Text();
-
+    private ArrayList<Text> texts = new ArrayList<>();
 
 
     public Stats(StackPane pane){
@@ -71,21 +80,16 @@ class Stats{
         temp.put("speed", 35);
         temp.put("special attack", 40);
 
-        health.setTranslateX(180);
-        defense.setTranslateX(180);
-        attack.setTranslateX(180);
-        speed.setTranslateX(180);
-        specialAttack.setTranslateX(180);
+        texts.add(health);
+        texts.add(defense);
+        texts.add(attack);
+        texts.add(speed);
+        texts.add(specialAttack);
 
 
-        health.setTranslateY(350);
-        defense.setTranslateY(400);
-        attack.setTranslateY(450);
-        speed.setTranslateY(500);
-        specialAttack.setTranslateY(550);
-
-
-
+        for (int i = 0; i < texts.size(); i++) {
+            setText(texts.get(i), 50, 350 + (i * 50));
+        }
 
 
 
@@ -94,6 +98,24 @@ class Stats{
         this.pane.getChildren().addAll(health, defense, attack, speed, specialAttack);
 
 
+    }
+
+
+    private void setText(Text text,int x, int y){
+        text.setTranslateX(x);
+        text.setTranslateY(y);
+
+        DropShadow ds = new DropShadow();
+        ds.setBlurType(BlurType.TWO_PASS_BOX);
+        ds.setOffsetY(3);
+        ds.setColor(Color.rgb(225, 225, 225));
+
+        text.setEffect(ds);
+        text.setCache(true);
+        text.setFill(Color.rgb(82, 82, 200));
+        text.setFont(Font.font(null, FontWeight.BOLD, 18));
+        text.setStroke(Color.BLACK);
+        text.setStrokeWidth(0.4);
     }
 
 
