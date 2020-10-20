@@ -145,7 +145,7 @@ class Stats {
     public void showPreviews(HashMap<String, Double> map) {
         for (String s :
                 map.keySet()) {
-            previews.get(s).setText(String.valueOf(map.get(s)));
+            previews.get(s).setText(String.valueOf((int) Math.round(map.get(s))));
             previews.get(s).setVisible(true);
         }
     }
@@ -181,10 +181,10 @@ class Stats {
             stats.put(s, map.get(s) + stats.get(s));
         }
 
-        health.setText("Health____________: " + stats.get("health"));
-        defense.setText("Defense___________: " + stats.get("defense"));
-        attack.setText("Attack____________: " + stats.get("attack"));
-        speed.setText("Speed_____________: " + stats.get("speed"));
-        specialAttack.setText("Special Attack____: " + stats.get("special attack"));
+        health.setText("Health____________: " + (int) Math.round(stats.get("health")));
+        defense.setText("Defense___________: " + (int) Math.round(stats.get("defense")));
+        attack.setText("Attack____________: " + (int) Math.round(stats.get("attack")));
+        speed.setText("Speed_____________: " + (int) Math.round(stats.get("speed")));
+        specialAttack.setText("Special Attack____: " + (int) Math.round(stats.get("special attack")));
     }
 }
